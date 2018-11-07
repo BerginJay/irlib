@@ -45,10 +45,11 @@
 #
 #
 
-from __future__ import print_function
+#from __future__ import print_function
 import math
 import numpy as np
 import pdb, traceback
+from tqdm import tqdm
 
 def csinci():
     """ Complex valued sinc function interpolation.
@@ -333,7 +334,7 @@ def fkmig(D, dt, dx, v, params=None):
     if th1 == th2:
         print("No dip filtering")
 
-    for j,kxi in enumerate(kx):
+    for j,kxi in tqdm(enumerate(kx)):
         # Evanescent cut-off
         fmin = abs(kxi) * ve
         ifmin = int(math.ceil(fmin / df)) + 1
@@ -352,17 +353,25 @@ def fkmig(D, dt, dx, v, params=None):
                 # Physical dips for each frequency
                 theta = np.arcsin(fmin / f[ifuse])
                 # Sample number to begin ramp
-                if1 = round(fmin / (math.sin(th1) * df))
+                if1 = int(round(fmin / (math.sin(th1) * df)))
                 if1 = max([if1, ifbeg])
                 # sample number to end ramp
-                if2 = round(fmin / (math.sin(th2) * df))
+                if2 = int(round(fmin / (math.sin(th2) * df)))
                 if2 = max([if2, ifbeg])
                 # Initialize mask to zeros
                 dipmask = np.zeros(f.shape)
                 # Pass these dips
                 dipmask[if1:nf-1] = 1
+                blabla=0.5 + 0.5 * np.cos(
+                        (theta[np.arange(if1, if2, -1) - ifbeg] - th1)
+                        * math.pi / float(th2-th1))
+# Original                
+#                dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
+#                        (theta[np.arange(if2, if1, -1) - ifbeg] - th1)
+#                        * math.pi / float(th2-th1))
+# Alain
                 dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
-                        (theta[np.arange(if2, if1, -1) - ifbeg] - th1)
+                        (theta[np.arange(if1, if2, -1) - ifbeg] - th1)
                         * math.pi / float(th2-th1))
         else:
             dipmask = np.ones(f.shape)
