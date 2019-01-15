@@ -362,15 +362,14 @@ def fkmig(D, dt, dx, v, params=None):
                 dipmask = np.zeros(f.shape)
                 # Pass these dips
                 dipmask[if1:nf-1] = 1
-                blabla=0.5 + 0.5 * np.cos(
-                        (theta[np.arange(if1, if2, -1) - ifbeg] - th1)
+                # Original
+                if if2<=if1:
+                    dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
+                        (theta[np.arange(if2, if1, -1) - ifbeg] - th1)
                         * math.pi / float(th2-th1))
-# Original                
-#                dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
-#                        (theta[np.arange(if2, if1, -1) - ifbeg] - th1)
-#                        * math.pi / float(th2-th1))
-# Alain
-                dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
+                else:
+                    # Alain
+                    dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
                         (theta[np.arange(if1, if2, -1) - ifbeg] - th1)
                         * math.pi / float(th2-th1))
         else:
