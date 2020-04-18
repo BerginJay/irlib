@@ -331,6 +331,7 @@ def fkmig(D, dt, dx, v, params=None):
 
     th1 = dipmax * math.pi / 180.0
     th2 = (dipmax+dipwid) * math.pi / 180.0
+    
     if th1 == th2:
         print("No dip filtering")
 
@@ -345,7 +346,8 @@ def fkmig(D, dt, dx, v, params=None):
             ifbeg = max([ifmin, 1])+1
             # Frequencies to migrate
             ifuse = np.arange(ifbeg, ifmaxmig+1)
-            if len(ifuse) == 1:
+            # if len(ifuse) == 1: # This was before 4/18/2020
+            if len(ifuse) <= 1: # Alain changed this on 4/18/2020
                 # Special case
                 dipmask = np.zeros(f.shape)
                 dipmask[ifuse-1] = 1
@@ -353,7 +355,7 @@ def fkmig(D, dt, dx, v, params=None):
                 # Physical dips for each frequency
                 theta = np.arcsin(fmin / f[ifuse])
                 # Sample number to begin ramp
-                if1 = int(round(fmin / (math.sin(th1) * df)))
+                if1 = int(round(fmin / (math.sin(th1) * df)))                
                 if1 = max([if1, ifbeg])
                 # sample number to end ramp
                 if2 = int(round(fmin / (math.sin(th2) * df)))
@@ -362,16 +364,9 @@ def fkmig(D, dt, dx, v, params=None):
                 dipmask = np.zeros(f.shape)
                 # Pass these dips
                 dipmask[if1:nf-1] = 1
-                # Original
-                if if2<=if1:
-                    dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
-                        (theta[np.arange(if2, if1, -1) - ifbeg] - th1)
-                        * math.pi / float(th2-th1))
-                else:
-                    # Alain
-                    dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
-                        (theta[np.arange(if1, if2, -1) - ifbeg] - th1)
-                        * math.pi / float(th2-th1))
+                dipmask[if2:if1] = 0.5 + 0.5 * np.cos(
+                        (theta[np.arange(if2, if1) - ifbeg] - th1)
+                        * math.pi / float(th2-th1))               
         else:
             dipmask = np.ones(f.shape)
 
