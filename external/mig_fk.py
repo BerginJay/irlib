@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+# This script is originally from https://github.com/AlainPlattner/irlib/tree/master/external/mig_fk.py
 #
 #   Implements an FK (Stolt) migration routine.
 #

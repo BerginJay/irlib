@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# This script is originally from https://github.com/AlainPlattner/irlib/tree/master/external/mig_kirchoff.py
 #
 #   An implementation of Kirchoff migration
 #
