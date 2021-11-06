@@ -86,7 +86,7 @@ def mig_kirchoff(D, X, T, v=1.68e8, xoffset=12.0, xwindow=50.0, pad_spacing=1.0)
     DMIG = np.zeros(D.shape)
     for i in range(D.shape[1]):
 
-        if i % 10 == 0: print 'calculating trace ', i
+        if i % 10 == 0: print('calculating trace ', i)
 
         ipad = i + halfwin
 
@@ -114,7 +114,7 @@ def test1():
     T = np.arange(0.0, 256*dt, dt)
     THYP = calc_toffset(X, T)
 
-    print THYP.max(), THYP.min(), THYP.mean()
+    print(THYP.max(), THYP.min(), THYP.mean())
 
     plt.figure()
     plt.imshow(THYP)
